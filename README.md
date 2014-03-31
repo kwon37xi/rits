@@ -1,2 +1,2 @@
-# Real Time Image Text Service
+# Realtime Image Text Service
 
