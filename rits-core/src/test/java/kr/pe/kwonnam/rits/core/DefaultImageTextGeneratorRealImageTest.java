@@ -1,7 +1,10 @@
 package kr.pe.kwonnam.rits.core;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.File;
@@ -9,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class DefaultImageTextGeneratorRealImageTest {
+    private final Logger log = LoggerFactory.getLogger(DefaultImageTextGeneratorRealImageTest.class);
+
     private String RESOURCE_PREFIX = "/testfonts";
     private String[] FONT_NAMES = new String[]{
             "Daum_Regular",
@@ -40,9 +45,12 @@ public class DefaultImageTextGeneratorRealImageTest {
         for (String fontname: FONT_NAMES) {
             Font font = getFont(fontname);
 
-            ImageTextParams params = new ImageTextParams(font, Margin.NO_MARGIN, 1000);
+            log.info("####### Font : {}", fontname);
+            ImageTextParams params = new ImageTextParams(font, Margin.NO_MARGIN, 1000, true, true, Color.YELLOW, Color.BLUE);
             ImageTextGenerator generator = new DefaultImageTextGenerator(params);
 
+            generator.writeln(TEXT);
+            generator.writeln(TEXT);
             generator.writeln(TEXT);
 
             generator.generateImage(ImageFormat.PNG, new File(parent, fontname + ".png"));

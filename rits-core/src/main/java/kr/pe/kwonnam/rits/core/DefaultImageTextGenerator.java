@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.Color;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.font.FontRenderContext;
@@ -67,7 +68,7 @@ public class DefaultImageTextGenerator implements ImageTextGenerator {
     @Override
     public void generateImage(ImageFormat imageFormat, OutputStream outputStream) {
         try {
-            int height = 50;
+            int height = 400;
             BufferedImage image = createBufferedImage(height);
             Graphics2D g2d = image.createGraphics();
             populateBackgroundAndForegroundColors(g2d, height);
@@ -93,7 +94,7 @@ public class DefaultImageTextGenerator implements ImageTextGenerator {
     }
 
     protected BufferedImage createBufferedImage(int height) {
-        return new BufferedImage(params.getWidth(), height, BufferedImage.TYPE_INT_RGB);
+        return new BufferedImage(params.getWidth(), height, BufferedImage.TYPE_INT_ARGB);
     }
 
     protected void populateBackgroundAndForegroundColors(Graphics2D g2d, int height) {
@@ -102,10 +103,9 @@ public class DefaultImageTextGenerator implements ImageTextGenerator {
 
         log.debug("Background : {}, Foreground : {}", backgroundColor, foregroundColor);
 
-        g2d.setColor(backgroundColor);
-        g2d.fillRect(0, 0, params.getWidth(), height);
-
+        g2d.setBackground(backgroundColor);
         g2d.setColor(foregroundColor);
+        g2d.clearRect(0, 0, params.getWidth(), height);
     }
 
     protected void populateFont(Graphics2D g2d) {
@@ -122,12 +122,21 @@ public class DefaultImageTextGenerator implements ImageTextGenerator {
 
 
     private void drawText(Graphics2D g2d) {
-        for (TextLayout textLayout : textLayouts) {
 
+        // FIXME lineheight, margin 등을 반영해야함.
+        FontMetrics fontMetrics = g2d.getFontMetrics(params.getFont());
+        Rectangle2D maxCharBounds = fontMetrics.getMaxCharBounds(g2d);
+        // macCharBounds가 시작 x,y좌표의 핵심 값인듯.
+
+        log.info("FontMaxCharBounds : {}", maxCharBounds);
+        log.info("FontMaxCharBounds.getBounds : {}", maxCharBounds.getBounds());
+
+
+        for (int i = 0; i < textLayouts.size(); i++){
+            TextLayout textLayout = textLayouts.get(i);
             Rectangle2D bounds = textLayout.getBounds();
 
-            log.debug("text bound : {}", bounds);
-            textLayout.draw(g2d, (float)bounds.getX(), (float)-bounds.getY());
+            textLayout.draw(g2d, (float) bounds.getX(), (float) ((-maxCharBounds.getY()) + (bounds.getHeight() * i)));
         }
 
 
