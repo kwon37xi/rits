@@ -1,6 +1,8 @@
 package kr.pe.kwonnam.rits.core;
 
 public class Margin {
+    public static final Margin NO_MARGIN = new Margin(0, 0);
+
     private int top;
     private int bottom;
     private int left;
