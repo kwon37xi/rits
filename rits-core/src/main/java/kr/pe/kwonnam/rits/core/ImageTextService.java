@@ -70,17 +70,13 @@ public class ImageTextService {
         int width = (int) bounds.getWidth();
         int height = (int) bounds.getHeight();
 
-        System.out.println("width : " + width + ", height : " + height);
+        log.info("width : {}, height : {}", width, height);
 
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
         Graphics2D g = image.createGraphics();
-
-        g.setComposite(AlphaComposite.Clear);
-//        g.setColor(Color.WHITE);
+        g.setColor(Color.WHITE);
         g.fillRect(0, 0, width, height);
-
-        g.setComposite(AlphaComposite.Src);
         g.setColor(Color.BLUE);
         g.setFont(font);
 
