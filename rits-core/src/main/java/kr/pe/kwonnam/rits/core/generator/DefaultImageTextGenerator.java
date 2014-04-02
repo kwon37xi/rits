@@ -142,7 +142,7 @@ public class DefaultImageTextGenerator implements ImageTextGenerator {
     }
 
     protected BufferedImage createBufferedImage(int height) {
-        return new BufferedImage(params.getWidth(), height, BufferedImage.TYPE_INT_ARGB);
+        return new BufferedImage(params.getWidth(), height, BufferedImage.TYPE_INT_RGB);
     }
 
     protected void populateBackgroundAndForegroundColors(Graphics2D g2d, int height) {

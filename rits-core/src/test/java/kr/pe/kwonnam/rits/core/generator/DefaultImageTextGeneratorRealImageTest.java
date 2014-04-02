@@ -78,6 +78,7 @@ public class DefaultImageTextGeneratorRealImageTest {
                     "무궁화 삼천리 화려강산 대한 사람, 대한으로 길이 보전하세.");
 
             generator.generateImage(ImageFormat.PNG, new File(parent, fontname + ".png"));
+            generator.generateImage(ImageFormat.JPEG, new File(parent, fontname + ".jpg"));
         }
     }
 }
