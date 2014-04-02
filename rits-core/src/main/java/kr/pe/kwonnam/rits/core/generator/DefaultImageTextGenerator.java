@@ -62,12 +62,12 @@ public class DefaultImageTextGenerator implements ImageTextGenerator {
         AttributedString attributedString = new AttributedString(string);
         attributedString.addAttribute(TextAttribute.FONT, params.getFont());
         AttributedCharacterIterator textInterator = attributedString.getIterator();
-        LineBreakMeasurer lineBreakMeasurer = new LineBreakMeasurer(textInterator, fontRenderContext);
+        LineBreakMeasurer lineBreakMeasurer = new LineBreakMeasurer(textInterator, params.getBreakIterator(), fontRenderContext);
 
-        int writeAreaWidth = params.getWidth() - params.getMargin().getLeft() - params.getMargin().getRight();
+        int wrappingWidth = params.getWidth() - params.getMargin().getLeft() - params.getMargin().getRight();
 
         while (lineBreakMeasurer.getPosition() < textInterator.getEndIndex()) {
-            TextLayout textLayout = lineBreakMeasurer.nextLayout(writeAreaWidth);
+            TextLayout textLayout = lineBreakMeasurer.nextLayout(wrappingWidth);
             textLayouts.add(textLayout);
         }
     }

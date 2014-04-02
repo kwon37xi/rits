@@ -1,6 +1,7 @@
 package kr.pe.kwonnam.rits.core;
 
 import java.awt.*;
+import java.text.BreakIterator;
 
 /**
  * 이미지 생성에 필요한 정보 전달용 데이터 클래스
@@ -21,6 +22,11 @@ public class ImageTextParams {
 
     private boolean antialiasing = true;
     private boolean useFractionalMatrics = true;
+
+    /** {@link kr.pe.kwonnam.rits.core.ImageTextGenerator#writelnWrapped(String)} 호출시에
+     * 새 줄로 구분하는 규칙을 지정한다. 기본은 단어 단위.
+     */
+    private BreakIterator breakIterator = BreakIterator.getWordInstance();
 
     public Font getFont() {
         return font;
@@ -86,6 +92,14 @@ public class ImageTextParams {
         this.useFractionalMatrics = useFractionalMatrics;
     }
 
+    public BreakIterator getBreakIterator() {
+        return breakIterator;
+    }
+
+    public void setBreakIterator(BreakIterator breakIterator) {
+        this.breakIterator = breakIterator;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -98,6 +112,8 @@ public class ImageTextParams {
         if (useFractionalMatrics != that.useFractionalMatrics) return false;
         if (width != that.width) return false;
         if (backgroundColor != null ? !backgroundColor.equals(that.backgroundColor) : that.backgroundColor != null)
+            return false;
+        if (breakIterator != null ? !breakIterator.equals(that.breakIterator) : that.breakIterator != null)
             return false;
         if (font != null ? !font.equals(that.font) : that.font != null) return false;
         if (foregroundColor != null ? !foregroundColor.equals(that.foregroundColor) : that.foregroundColor != null)
@@ -117,6 +133,7 @@ public class ImageTextParams {
         result = 31 * result + (foregroundColor != null ? foregroundColor.hashCode() : 0);
         result = 31 * result + (antialiasing ? 1 : 0);
         result = 31 * result + (useFractionalMatrics ? 1 : 0);
+        result = 31 * result + (breakIterator != null ? breakIterator.hashCode() : 0);
         return result;
     }
 
@@ -131,6 +148,7 @@ public class ImageTextParams {
                 ", foregroundColor=" + foregroundColor +
                 ", antialiasing=" + antialiasing +
                 ", useFractionalMatrics=" + useFractionalMatrics +
+                ", breakIterator=" + breakIterator +
                 '}';
     }
 }
