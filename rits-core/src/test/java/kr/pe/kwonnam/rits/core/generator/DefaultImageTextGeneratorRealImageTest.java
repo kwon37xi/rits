@@ -30,7 +30,11 @@ public class DefaultImageTextGeneratorRealImageTest {
             "NanumBrush",
             "NanumPen",
             "SeoulHangangEB",
-            "SeoulNamsanEB"
+            "SeoulNamsanEB",
+            "HANBatang",
+            "HANBatangB",
+            "HANDotum",
+            "HANDotumB"
     };
 
     public static final String TEXT = "Lorem ipsum dolor sit amet, 동해물과 백두산이 마르고 닳도록 1234576890";
@@ -54,7 +58,7 @@ public class DefaultImageTextGeneratorRealImageTest {
             log.debug("####### Font : {}", fontname);
             ImageTextParams params = new ImageTextParams();
             params.setFont(font);
-            params.setWidth(500);
+            params.setWidth(700);
             params.setBackgroundColor(Color.WHITE);
             params.setForegroundColor(Color.BLACK);
             params.setMargin(new Margin(25, 25));
