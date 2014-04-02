@@ -1,7 +1,6 @@
 package kr.pe.kwonnam.rits.core;
 
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.*;
 
 /**
  * 이미지 생성에 필요한 정보 전달용 데이터 클래스
@@ -10,72 +9,82 @@ public class ImageTextParams {
     public static final int MIN_WIDTH = 1;
     public static final Color DEFAULT_BACKGROUND_COLOR = Color.WHITE;
     public static final Color DEFAULT_FOREGROUND_COLOR = Color.BLACK;
+    public static final Font DEFAULT_FONT = new Font("Serif", Font.PLAIN, 12);
 
-    private Font font;
-    private Margin margin;
-    private int width;
+    private Font font = DEFAULT_FONT;
+    private Margin margin = Margin.NO_MARGIN;
+    private int lineHeight = 0;
+    private int width = MIN_WIDTH;
 
+    private Color backgroundColor = DEFAULT_BACKGROUND_COLOR;
+    private Color foregroundColor = DEFAULT_FOREGROUND_COLOR;
 
-    private Color backgroundColor;
-    private Color foregroundColor;
-
-    private boolean antialiasing;
-    private boolean useFractionalMatrics;
-
-    public ImageTextParams(Font font, Margin margin, int width, boolean antialiasing, boolean useFractionalMatrics, Color backgroundColor, Color foregroundColor) {
-        if (font == null) {
-            throw new IllegalArgumentException("font cannot be null");
-        }
-
-        if (margin == null) {
-            throw new IllegalArgumentException("margin cannot be null.");
-        }
-
-        if (width < MIN_WIDTH) {
-            throw new IllegalArgumentException("width cannot be less than " + MIN_WIDTH);
-        }
-
-        this.font = font;
-        this.margin = margin;
-        this.width = width;
-        this.antialiasing = antialiasing;
-        this.useFractionalMatrics = useFractionalMatrics;
-        this.backgroundColor = backgroundColor;
-        this.foregroundColor = foregroundColor;
-    }
-
-    public ImageTextParams(Font font, Margin margin, int width) {
-        this(font, margin, width, true, true, DEFAULT_BACKGROUND_COLOR, DEFAULT_FOREGROUND_COLOR);
-    }
+    private boolean antialiasing = true;
+    private boolean useFractionalMatrics = true;
 
     public Font getFont() {
         return font;
+    }
+
+    public void setFont(Font font) {
+        this.font = font;
     }
 
     public Margin getMargin() {
         return margin;
     }
 
+    public void setMargin(Margin margin) {
+        this.margin = margin;
+    }
+
+    public int getLineHeight() {
+        return lineHeight;
+    }
+
+    public void setLineHeight(int lineHeight) {
+        this.lineHeight = lineHeight;
+    }
+
     public int getWidth() {
         return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
     }
 
     public Color getBackgroundColor() {
         return backgroundColor;
     }
 
+    public void setBackgroundColor(Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
     public Color getForegroundColor() {
         return foregroundColor;
+    }
+
+    public void setForegroundColor(Color foregroundColor) {
+        this.foregroundColor = foregroundColor;
     }
 
     public boolean isAntialiasing() {
         return antialiasing;
     }
 
+    public void setAntialiasing(boolean antialiasing) {
+        this.antialiasing = antialiasing;
+    }
+
     public boolean isUseFractionalMatrics() {
         return useFractionalMatrics;
     }
 
+    public void setUseFractionalMatrics(boolean useFractionalMatrics) {
+        this.useFractionalMatrics = useFractionalMatrics;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -85,23 +94,27 @@ public class ImageTextParams {
         ImageTextParams that = (ImageTextParams) o;
 
         if (antialiasing != that.antialiasing) return false;
+        if (lineHeight != that.lineHeight) return false;
         if (useFractionalMatrics != that.useFractionalMatrics) return false;
         if (width != that.width) return false;
-        if (!backgroundColor.equals(that.backgroundColor)) return false;
-        if (!font.equals(that.font)) return false;
-        if (!foregroundColor.equals(that.foregroundColor)) return false;
-        if (!margin.equals(that.margin)) return false;
+        if (backgroundColor != null ? !backgroundColor.equals(that.backgroundColor) : that.backgroundColor != null)
+            return false;
+        if (font != null ? !font.equals(that.font) : that.font != null) return false;
+        if (foregroundColor != null ? !foregroundColor.equals(that.foregroundColor) : that.foregroundColor != null)
+            return false;
+        if (margin != null ? !margin.equals(that.margin) : that.margin != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = font.hashCode();
-        result = 31 * result + margin.hashCode();
+        int result = font != null ? font.hashCode() : 0;
+        result = 31 * result + (margin != null ? margin.hashCode() : 0);
+        result = 31 * result + lineHeight;
         result = 31 * result + width;
-        result = 31 * result + backgroundColor.hashCode();
-        result = 31 * result + foregroundColor.hashCode();
+        result = 31 * result + (backgroundColor != null ? backgroundColor.hashCode() : 0);
+        result = 31 * result + (foregroundColor != null ? foregroundColor.hashCode() : 0);
         result = 31 * result + (antialiasing ? 1 : 0);
         result = 31 * result + (useFractionalMatrics ? 1 : 0);
         return result;
@@ -112,6 +125,7 @@ public class ImageTextParams {
         return "ImageTextParams{" +
                 "font=" + font +
                 ", margin=" + margin +
+                ", lineHeight=" + lineHeight +
                 ", width=" + width +
                 ", backgroundColor=" + backgroundColor +
                 ", foregroundColor=" + foregroundColor +

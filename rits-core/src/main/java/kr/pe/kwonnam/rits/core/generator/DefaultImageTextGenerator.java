@@ -1,6 +1,10 @@
-package kr.pe.kwonnam.rits.core;
+package kr.pe.kwonnam.rits.core.generator;
 
 
+import kr.pe.kwonnam.rits.core.ImageFormat;
+import kr.pe.kwonnam.rits.core.ImageTextGenerator;
+import kr.pe.kwonnam.rits.core.ImageTextParams;
+import kr.pe.kwonnam.rits.core.RitsIoUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +58,16 @@ public class DefaultImageTextGenerator implements ImageTextGenerator {
     }
 
     @Override
+    public void newLine() {
+        // TODO
+    }
+
+    @Override
+    public void newLine(int lines) {
+        // TODO
+    }
+
+    @Override
     public void generateImage(ImageFormat imageFormat, File file) {
         FileOutputStream fos = null;
         try {
@@ -83,13 +97,7 @@ public class DefaultImageTextGenerator implements ImageTextGenerator {
         } catch (IOException ex) {
             throw new IllegalStateException("Failed to generate image. ImageFormat - " + imageFormat, ex);
         } finally {
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException ignored) {
-                    // ignored
-                }
-            }
+            RitsIoUtils.closeQuietly(outputStream);
         }
     }
 
@@ -128,8 +136,8 @@ public class DefaultImageTextGenerator implements ImageTextGenerator {
         Rectangle2D maxCharBounds = fontMetrics.getMaxCharBounds(g2d);
         // macCharBounds가 시작 x,y좌표의 핵심 값인듯.
 
-        log.info("FontMaxCharBounds : {}", maxCharBounds);
-        log.info("FontMaxCharBounds.getBounds : {}", maxCharBounds.getBounds());
+        log.debug("FontMaxCharBounds : {}", maxCharBounds);
+        log.debug("FontMaxCharBounds.getBounds : {}", maxCharBounds.getBounds());
 
 
         for (int i = 0; i < textLayouts.size(); i++){

@@ -9,6 +9,10 @@ public interface ImageTextGenerator {
 
     void writelnWrapped(String string);
 
+    void newLine();
+
+    void newLine(int lines);
+
     void generateImage(ImageFormat imageFormat, File file);
 
     void generateImage(ImageFormat imageFormat, OutputStream outputStream);

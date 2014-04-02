@@ -1,12 +1,13 @@
-package kr.pe.kwonnam.rits.core;
+package kr.pe.kwonnam.rits.core.generator;
 
+import kr.pe.kwonnam.rits.core.ImageFormat;
+import kr.pe.kwonnam.rits.core.ImageTextGenerator;
+import kr.pe.kwonnam.rits.core.ImageTextParams;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontFormatException;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,8 +46,12 @@ public class DefaultImageTextGeneratorRealImageTest {
         for (String fontname: FONT_NAMES) {
             Font font = getFont(fontname);
 
-            log.info("####### Font : {}", fontname);
-            ImageTextParams params = new ImageTextParams(font, Margin.NO_MARGIN, 1000, true, true, Color.YELLOW, Color.BLUE);
+            log.debug("####### Font : {}", fontname);
+            ImageTextParams params = new ImageTextParams();
+            params.setFont(font);
+            params.setWidth(1000);
+            params.setBackgroundColor(Color.GRAY);
+            params.setForegroundColor(Color.PINK);
             ImageTextGenerator generator = new DefaultImageTextGenerator(params);
 
             generator.writeln(TEXT);
