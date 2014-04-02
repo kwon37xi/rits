@@ -1,18 +1,12 @@
 package kr.pe.kwonnam.rits.core.generator;
 
 
-import kr.pe.kwonnam.rits.core.ImageFormat;
-import kr.pe.kwonnam.rits.core.ImageTextGenerator;
-import kr.pe.kwonnam.rits.core.ImageTextParams;
-import kr.pe.kwonnam.rits.core.RitsIoUtils;
+import kr.pe.kwonnam.rits.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
-import java.awt.Color;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
@@ -37,6 +31,11 @@ public class DefaultImageTextGenerator implements ImageTextGenerator {
 
     private FontRenderContext fontRenderContext;
 
+    private final Rectangle2D maxCharBounds;
+
+    /* New line marker. This line text is not rendered. */
+    private TextLayout newLineMarkerTextLine;
+
     public DefaultImageTextGenerator(ImageTextParams params) {
         if (params == null) {
             throw new IllegalArgumentException("params cannot be null.");
@@ -45,6 +44,8 @@ public class DefaultImageTextGenerator implements ImageTextGenerator {
         this.params = params;
         textLayouts = new ArrayList<TextLayout>();
         fontRenderContext = new FontRenderContext(null, params.isAntialiasing(), params.isUseFractionalMatrics());
+        maxCharBounds = params.getFont().getMaxCharBounds(fontRenderContext);
+        newLineMarkerTextLine = new TextLayout("\n", params.getFont(), fontRenderContext);
     }
 
     @Override
@@ -59,17 +60,20 @@ public class DefaultImageTextGenerator implements ImageTextGenerator {
 
     @Override
     public void newLine() {
-        // TODO
+        newLine(1);
     }
 
     @Override
     public void newLine(int lines) {
-        // TODO
+        for (int i = 0; i < lines; i++) {
+            textLayouts.add(newLineMarkerTextLine);
+        }
     }
 
     @Override
     public void generateImage(ImageFormat imageFormat, File file) {
         FileOutputStream fos = null;
+
         try {
             fos = new FileOutputStream(file);
         } catch (FileNotFoundException e) {
@@ -82,10 +86,10 @@ public class DefaultImageTextGenerator implements ImageTextGenerator {
     @Override
     public void generateImage(ImageFormat imageFormat, OutputStream outputStream) {
         try {
-            int height = 400;
-            BufferedImage image = createBufferedImage(height);
+            float height = calculateHeight();
+            BufferedImage image = createBufferedImage((int) height);
             Graphics2D g2d = image.createGraphics();
-            populateBackgroundAndForegroundColors(g2d, height);
+            populateBackgroundAndForegroundColors(g2d, (int) height);
             populateFont(g2d);
             populateRenderingHints(g2d);
 
@@ -99,6 +103,28 @@ public class DefaultImageTextGenerator implements ImageTextGenerator {
         } finally {
             RitsIoUtils.closeQuietly(outputStream);
         }
+    }
+
+    float calculateHeight() {
+        float height = 0.0F;
+
+        Margin margin = params.getMargin();
+        height += margin.getTop() + margin.getBottom() + (-maxCharBounds.getY());
+
+        for (int i = 0; i < textLayouts.size(); i++) {
+            height += calculateNextHeight(i);
+        }
+
+        return height;
+    }
+
+    private float calculateNextHeight(int index) {
+        float nextHeight = 0;
+
+        if (index != 0) {
+            nextHeight = params.getLineHeight() + (float) maxCharBounds.getHeight();
+        }
+        return nextHeight;
     }
 
     protected BufferedImage createBufferedImage(int height) {
@@ -130,23 +156,34 @@ public class DefaultImageTextGenerator implements ImageTextGenerator {
 
 
     private void drawText(Graphics2D g2d) {
+        float y = calculateStartingY();
 
-        // FIXME lineheight, margin 등을 반영해야함.
-        FontMetrics fontMetrics = g2d.getFontMetrics(params.getFont());
-        Rectangle2D maxCharBounds = fontMetrics.getMaxCharBounds(g2d);
-        // macCharBounds가 시작 x,y좌표의 핵심 값인듯.
+        log.debug("base y : {}", y);
 
-        log.debug("FontMaxCharBounds : {}", maxCharBounds);
-        log.debug("FontMaxCharBounds.getBounds : {}", maxCharBounds.getBounds());
-
-
-        for (int i = 0; i < textLayouts.size(); i++){
+        for (int i = 0; i < textLayouts.size(); i++) {
             TextLayout textLayout = textLayouts.get(i);
             Rectangle2D bounds = textLayout.getBounds();
 
-            textLayout.draw(g2d, (float) bounds.getX(), (float) ((-maxCharBounds.getY()) + (bounds.getHeight() * i)));
+            float x = calculateCurrentX(params.getMargin(), bounds);
+            float nextHeight = calculateNextHeight(i);
+
+            y += nextHeight;
+
+            log.debug("current({}) y : {}", i, y);
+            textLayout.draw(g2d, x, y);
         }
+    }
 
+    private float calculateStartingY() {
+        float y = params.getMargin().getTop();
 
+        // drawString은 좌표 기준점이 글자의 좌상단이 아니라 baseLine이다.
+        // 따라서 baseLine만큼 아래로 좌표를 잡아야한다.
+        y += (-maxCharBounds.getY());
+        return y;
+    }
+
+    private float calculateCurrentX(Margin margin, Rectangle2D bounds) {
+        return (float) (bounds.getX() + margin.getLeft());
     }
 }
