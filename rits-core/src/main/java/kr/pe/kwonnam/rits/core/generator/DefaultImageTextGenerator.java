@@ -8,10 +8,14 @@ import org.slf4j.LoggerFactory;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
+import java.awt.font.LineBreakMeasurer;
+import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.text.AttributedCharacterIterator;
+import java.text.AttributedString;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +38,7 @@ public class DefaultImageTextGenerator implements ImageTextGenerator {
     private final Rectangle2D maxCharBounds;
 
     /* New line marker. This line text is not rendered. */
-    private TextLayout newLineMarkerTextLine;
+    private TextLayout newLineMarkerTextLayout;
 
     public DefaultImageTextGenerator(ImageTextParams params) {
         if (params == null) {
@@ -45,7 +49,7 @@ public class DefaultImageTextGenerator implements ImageTextGenerator {
         textLayouts = new ArrayList<TextLayout>();
         fontRenderContext = new FontRenderContext(null, params.isAntialiasing(), params.isUseFractionalMatrics());
         maxCharBounds = params.getFont().getMaxCharBounds(fontRenderContext);
-        newLineMarkerTextLine = new TextLayout("\n", params.getFont(), fontRenderContext);
+        newLineMarkerTextLayout = new TextLayout("\n", params.getFont(), fontRenderContext);
     }
 
     @Override
@@ -55,7 +59,17 @@ public class DefaultImageTextGenerator implements ImageTextGenerator {
 
     @Override
     public void writelnWrapped(String string) {
-        // TODO
+        AttributedString attributedString = new AttributedString(string);
+        attributedString.addAttribute(TextAttribute.FONT, params.getFont());
+        AttributedCharacterIterator textInterator = attributedString.getIterator();
+        LineBreakMeasurer lineBreakMeasurer = new LineBreakMeasurer(textInterator, fontRenderContext);
+
+        int writeAreaWidth = params.getWidth() - params.getMargin().getLeft() - params.getMargin().getRight();
+
+        while (lineBreakMeasurer.getPosition() < textInterator.getEndIndex()) {
+            TextLayout textLayout = lineBreakMeasurer.nextLayout(writeAreaWidth);
+            textLayouts.add(textLayout);
+        }
     }
 
     @Override
@@ -66,7 +80,7 @@ public class DefaultImageTextGenerator implements ImageTextGenerator {
     @Override
     public void newLine(int lines) {
         for (int i = 0; i < lines; i++) {
-            textLayouts.add(newLineMarkerTextLine);
+            textLayouts.add(newLineMarkerTextLayout);
         }
     }
 
