@@ -3,7 +3,6 @@ package kr.pe.kwonnam.rits.core.generator;
 import kr.pe.kwonnam.rits.core.ImageFormat;
 import kr.pe.kwonnam.rits.core.ImageTextGenerator;
 import kr.pe.kwonnam.rits.core.ImageTextParams;
-import kr.pe.kwonnam.rits.core.Margin;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +60,7 @@ public class DefaultImageTextGeneratorRealImageTest {
             params.setWidth(700);
             params.setBackgroundColor(Color.WHITE);
             params.setForegroundColor(Color.BLACK);
-            params.setMargin(new Margin(25, 25));
+//            params.setMargin(new Margin(25, 25));
             params.setLineHeight(7);
             params.setBreakIterator(BreakIterator.getCharacterInstance());
             ImageTextGenerator generator = new DefaultImageTextGenerator(params);

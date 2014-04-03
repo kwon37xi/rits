@@ -100,7 +100,7 @@ public class DefaultImageTextGenerator implements ImageTextGenerator {
     @Override
     public void generateImage(ImageFormat imageFormat, OutputStream outputStream) {
         try {
-            float height = calculateHeight();
+            float height = calculateImageHeight();
             BufferedImage image = createBufferedImage((int) height);
             Graphics2D g2d = image.createGraphics();
             populateBackgroundAndForegroundColors(g2d, (int) height);
@@ -119,11 +119,11 @@ public class DefaultImageTextGenerator implements ImageTextGenerator {
         }
     }
 
-    float calculateHeight() {
+    float calculateImageHeight() {
         float height = 0.0F;
 
         Margin margin = params.getMargin();
-        height += margin.getTop() + margin.getBottom() + (-maxCharBounds.getY());
+        height += margin.getTop() + margin.getBottom() + maxCharBounds.getHeight();
 
         for (int i = 0; i < textLayouts.size(); i++) {
             height += calculateNextHeight(i);
