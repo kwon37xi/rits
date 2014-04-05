@@ -7,7 +7,7 @@ If you want like long text data image, you'd better refer to [TextImageGenerator
 
 ## rits-core API
 * Refer to `DefaultImageTextGeneratorRealImageTest.java`
-* This api support flexible image height. It will calculate the strings' total height, then decide the image size.
+* This api support flexible image height. It will calculate the strings' total height, then decide the image height.
 
 ### Requirements
 * Java 6
