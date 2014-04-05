@@ -54,7 +54,7 @@ You will have like the following image.
 TODO
 
 rits-server is a web application which is based on rits-core.
-This application servers request from another application or browser to generate images on the fly.
+This application serves requests from another applications or web browsers to generate images on the fly.
 
 ### Requirements
 * Java 6
