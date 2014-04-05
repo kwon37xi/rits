@@ -33,18 +33,14 @@ params.setBreakIterator(BreakIterator.getWordInstance()); // Line wrapping rule.
 ImageTextGenerator generator = new DefaultImageTextGenerator(params);
 
 // add texts
-generator.writeln("Lorem ipsum dolor sit amet,")
+generator.writeln("Realtime Image Text Service");
+generator.writeln("실시간 이미지 텍스트 생성 서비스");
 generator.newLine();
 generator.writelnWrapped("Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-        "Duis sapien nibh, auctor at urna non, rutrum fermentum metus. " +
-        "Nam elementum dignissim volutpat. Nunc lacinia enim ac neque rhoncus, " +
-        "at lacinia leo pharetra. Aenean sit amet arcu suscipit metus tincidunt tempus non quis justo. " +
-        "Duis orci diam, rhoncus non porttitor mollis, accumsan eget purus. " +
-        "Vestibulum sit amet turpis a sem gravida scelerisque eu egestas sem. " +
-        "Etiam sodales enim sed est posuere, non tristique leo ornare.");
+        "Duis sapien nibh, auctor at urna non, rutrum fermentum metus.");
 
 // generate image file
-generator.generateImage(ImageFormat.PNG, new File("loremipsum.png"));
+generator.generateImage(ImageFormat.PNG, new File("example.png"));
 ```
 
 You will have like the following image.
