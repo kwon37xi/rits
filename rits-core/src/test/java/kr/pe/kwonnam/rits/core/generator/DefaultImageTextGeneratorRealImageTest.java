@@ -3,6 +3,8 @@ package kr.pe.kwonnam.rits.core.generator;
 import kr.pe.kwonnam.rits.core.ImageFormat;
 import kr.pe.kwonnam.rits.core.ImageTextGenerator;
 import kr.pe.kwonnam.rits.core.ImageTextParams;
+import kr.pe.kwonnam.rits.core.Margin;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,25 +20,22 @@ public class DefaultImageTextGeneratorRealImageTest {
 
     private static final String RESOURCE_PREFIX = "/testfonts";
     private static final String[] FONT_NAMES = new String[]{
-            "NanumGothic",
             "NanumGothicBold",
-            "NanumGothicExtraBold",
-            "NanumMyeongjo",
             "NanumMyeongjoBold",
-            "NanumMyeongjoExtraBold",
-            "NanumBarunGothic",
-            "NanumBarunGothicBold",
             "NanumBrush",
-            "NanumPen",
-            "SeoulHangangEB",
-            "SeoulNamsanEB",
-            "HANBatang",
-            "HANBatangB",
-            "HANDotum",
-            "HANDotumB"
+            "NanumPen"
     };
 
     public static final String TEXT = "Lorem ipsum dolor sit amet, 동해물과 백두산이 마르고 닳도록 1234576890";
+
+    private File parent = new File("build");
+
+    @Before
+    public void setUp() {
+        if (!parent.exists()) {
+            parent.mkdir();
+        }
+    }
 
     private Font getFont(String fontname) throws IOException, FontFormatException {
         InputStream is = this.getClass().getResourceAsStream(RESOURCE_PREFIX + "/" + fontname + ".ttf");
@@ -46,10 +45,7 @@ public class DefaultImageTextGeneratorRealImageTest {
 
     @Test
     public void generate() throws Exception {
-        File parent = new File("build");
-        if (!parent.exists()) {
-            parent.mkdir();
-        }
+
 
         for (String fontname : FONT_NAMES) {
             Font font = getFont(fontname);
@@ -60,7 +56,6 @@ public class DefaultImageTextGeneratorRealImageTest {
             params.setWidth(700);
             params.setBackgroundColor(Color.WHITE);
             params.setForegroundColor(Color.BLACK);
-//            params.setMargin(new Margin(25, 25));
             params.setLineHeight(7);
             params.setBreakIterator(BreakIterator.getCharacterInstance());
             ImageTextGenerator generator = new DefaultImageTextGenerator(params);
@@ -83,5 +78,37 @@ public class DefaultImageTextGeneratorRealImageTest {
             generator.generateImage(ImageFormat.PNG, new File(parent, fontname + ".png"));
             generator.generateImage(ImageFormat.JPEG, new File(parent, fontname + ".jpg"));
         }
+    }
+
+    @Test
+    public void generateSimple() throws Exception {
+        Font font = getFont("NanumBrush");
+
+        // Set image attributes.
+        ImageTextParams params = new ImageTextParams();
+        params.setFont(font);
+        params.setWidth(500); // image width
+        params.setBackgroundColor(Color.LIGHT_GRAY);
+        params.setForegroundColor(Color.BLUE);
+        params.setMargin(new Margin(25, 25));
+        params.setLineHeight(5); // line height pixel
+
+        params.setBreakIterator(BreakIterator.getWordInstance()); // Line wrapping rule.
+
+        ImageTextGenerator generator = new DefaultImageTextGenerator(params);
+
+        // add texts
+        generator.writeln("Lorem ipsum dolor sit amet,");
+        generator.newLine();
+        generator.writelnWrapped("Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+                "Duis sapien nibh, auctor at urna non, rutrum fermentum metus. " +
+                "Nam elementum dignissim volutpat. Nunc lacinia enim ac neque rhoncus, " +
+                "at lacinia leo pharetra. Aenean sit amet arcu suscipit metus tincidunt tempus non quis justo. " +
+                "Duis orci diam, rhoncus non porttitor mollis, accumsan eget purus. " +
+                "Vestibulum sit amet turpis a sem gravida scelerisque eu egestas sem. " +
+                "Etiam sodales enim sed est posuere, non tristique leo ornare.");
+
+        // generate image file
+        generator.generateImage(ImageFormat.PNG, new File(parent, "loremipsum.png"));
     }
 }
