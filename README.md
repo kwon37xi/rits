@@ -45,7 +45,7 @@ generator.generateImage(ImageFormat.PNG, new File("example.png"));
 
 You will have like the following image.
 
-![generated image](https://raw.githubusercontent.com/kwon37xi/rits/master/loremipsum.png "generated lorem ipsum image")
+![generated image](https://raw.githubusercontent.com/kwon37xi/rits/master/example.png "generated lorem ipsum image")
 
 ### Caution
 * New lines(\n) in the string are ignored. If you want a new line, you must call `ImageTextGenerator.newLine()` explicitly.
