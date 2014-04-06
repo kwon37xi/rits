@@ -24,8 +24,8 @@ Font font = Font.createFont(Font.TRUETYPE_FONT, new File("/path/to/ttf/font/your
 ImageTextParams params = new ImageTextParams();
 params.setFont(font);
 params.setWidth(500); // image width
-params.setBackgroundColor(Color.WHITE);
-params.setForegroundColor(Color.BLACK);
+params.setBackgroundColor(Color.decode("#f0f0f0"));
+params.setForegroundColor(Color.BLUE);
 params.setMargin(new Margin(25, 25));
 params.setLineHeight(5); // line height pixel
 params.setBreakIterator(BreakIterator.getWordInstance()); // Line wrapping rule.
