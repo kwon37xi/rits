@@ -3,7 +3,7 @@
 Realtime Image Text Service is for creating heading image text from any TTF fonts.
 Actually this is not for usual long text.
 
-If you want like long text data image, you'd better refer to [TextImageGenerator](https://github.com/jcraane/textimagegenerator).
+If you want long text data images, you'd better refer to [TextImageGenerator](https://github.com/jcraane/textimagegenerator).
 
 ## rits-core API
 * Refer to `DefaultImageTextGeneratorRealImageTest.java`
